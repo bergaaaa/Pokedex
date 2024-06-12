@@ -10,27 +10,28 @@ import XCTest
 
 final class PokedexInterviewTests: XCTestCase {
 
-    override func setUpWithError() throws {
-        // Put setup code here. This method is called before the invocation of each test method in the class.
+    func testViewModelEmpty() throws {
+        let viewModel = PokedexViewModel()
+        
+        XCTAssertTrue(viewModel.pokemonList.isEmpty)
     }
-
-    override func tearDownWithError() throws {
-        // Put teardown code here. This method is called after the invocation of each test method in the class.
+    
+    func testViewController() throws {
+        let viewController = PokedexViewController()
+        XCTAssertTrue(viewController.viewModel.displayedList.isEmpty)
+        
+        viewController.viewModel = ViewModelMocked()
+        viewController.viewDidLoad()
+        XCTAssertFalse(viewController.viewModel.displayedList.isEmpty)
     }
+}
 
-    func testExample() throws {
-        // This is an example of a functional test case.
-        // Use XCTAssert and related functions to verify your tests produce the correct results.
-        // Any test you write for XCTest can be annotated as throws and async.
-        // Mark your test throws to produce an unexpected failure when your test encounters an uncaught error.
-        // Mark your test async to allow awaiting for asynchronous code to complete. Check the results with assertions afterwards.
+class ViewModelMocked: PokedexViewModel {
+    override func getPokemons(completion: @escaping () -> Void) {
+        self.displayedList = [Pokemon(id: 0, name: "Kyogre", type1: .water, description: ""),
+                            Pokemon(id: 1, name: "Groudon", type1: .fire, description: ""),
+                            Pokemon(id: 2, name: "Rayquaza", type1: .dragon, type2: .dragon, description: "")]
+        
+        completion()
     }
-
-    func testPerformanceExample() throws {
-        // This is an example of a performance test case.
-        self.measure {
-            // Put the code you want to measure the time of here.
-        }
-    }
-
 }
